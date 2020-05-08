@@ -1,0 +1,11 @@
+*-env/
+*.egg-info
+
+.pytest_cache/
+__pycache__/
+.nox/
+
+.vscode/
+
+build/
+dist/
