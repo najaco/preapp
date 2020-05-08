@@ -8,7 +8,7 @@ class FrameworkNode(Node):
 
     def __init__(self):
         super(FrameworkNode, self).__init__(
-            "framework", [], requirements=["nodejs", "platform", "github", "github_clone"],
+            "framework", [], parents=["nodejs", "platform", "github", "github_clone"],
         )
 
     def pre_process(self):
@@ -45,7 +45,7 @@ class FrameworkNode(Node):
                 # stdout, _ = process.communicate()
 
                 process = subprocess.Popen(
-                    f"cd {project_name} && npx create-react-app website",  
+                    f"cd {project_name} && npx create-react-app website",
                     shell=True,
                     stdout=subprocess.PIPE,
                 )
@@ -53,6 +53,42 @@ class FrameworkNode(Node):
 
                 commit_and_push(
                     "Initialized React",
+                    project_name,
+                    github_username,
+                    github_password,
+                    directory=project_name,
+                )
+
+        if "web" in responses and responses["web"] == "angular":
+            project_name: str = self.get_full_response()["metadata"]["name"]
+            # assert that angular is installed
+            process = subprocess.Popen(
+                "npm install -g @angular/cli", shell=True, stdout=subprocess.PIPE
+            )
+            stdout, _ = process.communicate()
+
+            if not self.get_full_response()["github"]["use"]:
+                process = subprocess.Popen(
+                    "ng new " + project_name, shell=True, stdout=subprocess.PIPE,
+                )
+                stdout, _ = process.communicate()
+            else:
+                github_username: str = self.get_full_response()["github_credentials"][
+                    "username"
+                ]
+                github_password: str = self.get_full_response()["github_credentials"][
+                    "password"
+                ]
+
+                process = subprocess.Popen(
+                    f"cd {project_name} && ng new website",
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                )
+                stdout, _ = process.communicate()
+
+                commit_and_push(
+                    "Initialized Angular",
                     project_name,
                     github_username,
                     github_password,
