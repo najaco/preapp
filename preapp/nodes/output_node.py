@@ -16,7 +16,7 @@ class OutputNode(Node):
             ],
             priority=sys.maxsize,  # should always occur last
             serializable=False,
-            requirements=["metadata"],
+            parents=["metadata"],
         )
 
     def post_process(self, responses):

@@ -10,7 +10,7 @@ class GithubCloneNode(Node):
         super(GithubCloneNode, self).__init__(
             "github_clone",
             [],
-            requirements=[
+            parents=[
                 "metadata",
                 "github",
                 "github_repository",

@@ -12,7 +12,7 @@ class GithubActionsNode(Node):
         super(GithubActionsNode, self).__init__(
             "github_actions",
             [ConfirmQuestion("use", "Do you want to add github actions?", True)],
-            requirements=[
+            parents=[
                 "github",
                 "github_repository",
                 "github_credentials",
