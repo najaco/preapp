@@ -12,9 +12,7 @@ class NodeJSNode(Node):
         )
 
     def add_tool_version_as_attribute(self, tool_name: str) -> None:
-        process: Popen = subprocess.Popen(
-            tool_name + " -v", shell=True, stdout=subprocess.PIPE
-        )
+        process: Popen = subprocess.Popen(tool_name + " -v", shell=True, stdout=subprocess.PIPE)
         stdout, _ = process.communicate()
         for line in stdout.splitlines():
             match = re.search(r"\d+\.\d+\.\d+", line.decode())

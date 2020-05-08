@@ -12,12 +12,7 @@ class GithubActionsNode(Node):
         super(GithubActionsNode, self).__init__(
             "github_actions",
             [ConfirmQuestion("use", "Do you want to add github actions?", True)],
-            parents=[
-                "github",
-                "github_repository",
-                "github_credentials",
-                "framework",
-            ],
+            parents=["github", "github_repository", "github_credentials", "framework",],
         )
 
     def post_process(self, responses):
@@ -26,12 +21,8 @@ class GithubActionsNode(Node):
             if "web" in frameworks:
                 # we can add the web github actions file
                 project_name: str = self.get_full_response()["metadata"]["name"]
-                github_username: str = self.get_full_response()["github_credentials"][
-                    "username"
-                ]
-                github_password: str = self.get_full_response()["github_credentials"][
-                    "password"
-                ]
+                github_username: str = self.get_full_response()["github_credentials"]["username"]
+                github_password: str = self.get_full_response()["github_credentials"]["password"]
                 process = subprocess.Popen(
                     f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
                     shell=True,
@@ -39,9 +30,7 @@ class GithubActionsNode(Node):
                 )
                 stdout, _ = process.communicate()
                 dirname, filename = os.path.split(os.path.abspath(__file__))
-                actions_src_file: TextIOWrapper = open(
-                    f"{dirname}/../../assets/nodejs.yml", "r"
-                )
+                actions_src_file: TextIOWrapper = open(f"{dirname}/../../assets/nodejs.yml", "r")
                 actions_dest_file: TextIOWrapper = open(
                     f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml", "w+"
                 )

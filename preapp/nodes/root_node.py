@@ -6,10 +6,7 @@ class RootNode(Node):
 
     def __init__(self):
         super(RootNode, self).__init__(
-            "root",
-            [],
-            children=["metadata", "github", "platform", "output"],
-            serializable=False,
+            "root", [], children=["metadata", "github", "platform", "output"], serializable=False,
         )
 
 

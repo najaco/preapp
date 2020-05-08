@@ -8,22 +8,14 @@ class GithubRepositoryNode(Node):
     def __init__(self):
         super(GithubRepositoryNode, self).__init__(
             "github_repository",
-            [
-                ConfirmQuestion(
-                    "create", "Do you want to create a github repository?", True
-                )
-            ],
+            [ConfirmQuestion("create", "Do you want to create a github repository?", True)],
             parents=["github", "github_credentials"],
         )
 
     def post_process(self, responses):
         if responses["create"] == True:
-            github_username: str = self.get_full_response()["github_credentials"][
-                "username"
-            ]
-            github_password: str = self.get_full_response()["github_credentials"][
-                "password"
-            ]
+            github_username: str = self.get_full_response()["github_credentials"]["username"]
+            github_password: str = self.get_full_response()["github_credentials"]["password"]
 
             github_object = Github(github_username, github_password)
 
@@ -43,7 +35,7 @@ class GithubRepositoryNode(Node):
             )
 
             # allow for github actions to be added
-            self.add_child('github_actions')
+            self.add_child("github_actions")
 
 
 Node.register(GithubRepositoryNode())

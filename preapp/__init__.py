@@ -5,6 +5,5 @@ from .question import (
     CheckboxQuestion,
     InputQuestion,
     ListQuestion,
-    PasswordQuestion
+    PasswordQuestion,
 )
-

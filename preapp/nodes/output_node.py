@@ -3,17 +3,14 @@ from typing import Dict, Any
 import json
 import sys
 
+
 class OutputNode(Node):
     """Manages the the output of all nodes executed """
 
     def __init__(self):
         super(OutputNode, self).__init__(
             "output",
-            [
-                ConfirmQuestion(
-                    "save", "Do you want to save these settings as a json file.", True,
-                )
-            ],
+            [ConfirmQuestion("save", "Do you want to save these settings as a json file.", True,)],
             priority=sys.maxsize,  # should always occur last
             serializable=False,
             parents=["metadata"],
@@ -32,9 +29,7 @@ class OutputNode(Node):
             project_name: str = self.get_full_response()["metadata"]["name"]
             data_str: str = json.dumps(print_data)
 
-            file_pointer: TextIOWrapper = open(
-                f"{project_name}/preapp_config.json", "w+"
-            )
+            file_pointer: TextIOWrapper = open(f"{project_name}/preapp_config.json", "w+")
             file_pointer.write(data_str)
             file_pointer.close()
 
