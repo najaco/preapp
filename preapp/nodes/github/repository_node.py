@@ -13,7 +13,7 @@ class GithubRepositoryNode(Node):
                     "create", "Do you want to create a github repository?", True
                 )
             ],
-            requirements=["github", "github_credentials"],
+            parents=["github", "github_credentials"],
         )
 
     def post_process(self, responses):

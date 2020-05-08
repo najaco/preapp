@@ -12,7 +12,7 @@ class GithubCredentialsNode(Node):
                 PasswordQuestion("password", "Enter your github password",),
             ],
             serializable=False,
-            requirements=["github"],
+            parents=["github"],
         )
 
 
