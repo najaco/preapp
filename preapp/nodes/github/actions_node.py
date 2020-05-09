@@ -21,12 +21,8 @@ class GithubActionsNode(Node):
             frameworks: List[str] = self.get_full_response()["framework"]
             if "web" in frameworks:
                 project_name: str = self.get_full_response()["metadata"]["name"]
-                github_username: str = self.get_full_response()["github_credentials"][
-                    "username"
-                ]
-                github_password: str = self.get_full_response()["github_credentials"][
-                    "password"
-                ]
+                github_username: str = self.get_full_response()["github_credentials"]["username"]
+                github_password: str = self.get_full_response()["github_credentials"]["password"]
 
                 process = subprocess.Popen(
                     f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
