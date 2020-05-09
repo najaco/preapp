@@ -95,7 +95,7 @@ class FrameworkNode(Node):
 
             if not self.get_full_response()["github"]["use"]:
                 process = subprocess.Popen(
-                    "vue create " + project_name, shell=True, stdout=subprocess.PIPE,
+                    "vue create -d " + project_name, shell=True, stdout=subprocess.PIPE,
                 )
                 stdout, _ = process.communicate()
             else:
