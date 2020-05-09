@@ -1,0 +1,36 @@
+name: Angular CI
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./website
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          working-directory: ${{env.working-directory}}
+          node-version: ${{ matrix.node-version }}
+
+      - name: npm ci and npm run build
+        working-directory: ${{env.working-directory}}
+        run: |
+          npm ci
+          npm run build:ci

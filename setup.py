@@ -9,5 +9,5 @@ setup(
     packages=find_packages(where="."),
     license="MIT",
     install_requires=[line.strip() for line in open("requirements.txt").readlines()],
-    package_data={"": ["*.yml"]},
+    package_data={"": ["*.yml", "*.js"]},
 )
