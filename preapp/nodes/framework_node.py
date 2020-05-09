@@ -1,6 +1,6 @@
 import subprocess
 from .. import Node, ListQuestion
-from ..utils import commit_and_push
+from ..utils import commit_and_push, __assets_directory__
 
 
 class FrameworkNode(Node):
@@ -75,6 +75,42 @@ class FrameworkNode(Node):
 
                 commit_and_push(
                     "Initialized Angular",
+                    project_name,
+                    github_username,
+                    github_password,
+                    directory=project_name,
+                )
+
+        if "web" in responses and responses["web"] == "vue":
+            project_name: str = self.get_full_response()["metadata"]["name"]
+            # assert that vue is installed
+            process = subprocess.Popen("npm install -g vue", shell=True, stdout=subprocess.PIPE)
+            stdout, _ = process.communicate()
+
+            # assert the vue cli is installed
+            process = subprocess.Popen(
+                "npm install -g @vue/cli", shell=True, stdout=subprocess.PIPE
+            )
+            stdout, _ = process.communicate()
+
+            if not self.get_full_response()["github"]["use"]:
+                process = subprocess.Popen(
+                    "vue create " + project_name, shell=True, stdout=subprocess.PIPE,
+                )
+                stdout, _ = process.communicate()
+            else:
+                github_username: str = self.get_full_response()["github_credentials"]["username"]
+                github_password: str = self.get_full_response()["github_credentials"]["password"]
+
+                process = subprocess.Popen(
+                    f"cd {project_name} && vue create -d website",
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                )
+                stdout, _ = process.communicate()
+
+                commit_and_push(
+                    "Initialized Vue",
                     project_name,
                     github_username,
                     github_password,
