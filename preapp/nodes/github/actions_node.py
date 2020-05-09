@@ -90,6 +90,14 @@ class GithubActionsNode(Node):
                         github_password,
                     )
 
+                if frameworks["web"] == "vue":
+                    commit_actions_file(
+                        f"{dirname}/../../assets/vue/nodejs.yml",
+                        project_name,
+                        github_username,
+                        github_password,
+                    )
+
 
 Node.register(GithubActionsNode())
 
