@@ -22,7 +22,7 @@ def commit_and_push(
         project_owner = username
 
     process = subprocess.Popen(
-        f'cd {directory} && git add . && git commit -m "Setup Github Actions" && git push https://{username}:{password}@github.com/{project_owner}/{project_name}.git',
+        f'cd {directory} && git add . && git commit -m "{commit_message}" && git push https://{username}:{password}@github.com/{project_owner}/{project_name}.git',
         shell=True,
         stdout=subprocess.PIPE,
     )
