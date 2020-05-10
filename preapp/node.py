@@ -64,6 +64,10 @@ class Node(ABC):
     def process(self) -> None:
         """Processes this node
         """
+
+        # this guarentees this value isn't oevr written by a file input
+        self.add_attribute({"serializable": self.serializable})
+
         for key in self._parents:
             node: "Node" = Node._node_table[key][0]
             self.parents.put((node.priority, node))
@@ -84,7 +88,8 @@ class Node(ABC):
 
             # process the questions for this node
             for question in self.questions:
-                self.add_attribute(prompt(question.json()))
+                if not question.name() in Node._full_response[self.name]:
+                    self.add_attribute(prompt(question.json()))
 
             # run code to finialize the processing of this node
             self.post_process(Node._full_response[self.name])
@@ -152,7 +157,6 @@ class Node(ABC):
         """
         if not Node.is_registered(node):
             Node._full_response[node.name] = {}
-            node.add_attribute({"serializable": node.serializable})
             Node._node_table[node.name] = (node, False)
 
     @staticmethod
