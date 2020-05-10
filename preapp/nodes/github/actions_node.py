@@ -34,7 +34,7 @@ class GithubActionsNode(Node):
 
                 if frameworks["web"] == "react":
                     commit_actions_file(
-                        f"{dirname}/../../assets/nodejs.yml",
+                        f"{dirname}/../../assets/react/nodejs.yml",
                         project_name,
                         github_username,
                         github_password,
