@@ -36,6 +36,7 @@ class GithubRepositoryNode(Node):
 
             # allow for github actions to be added
             self.add_child("github_actions")
+            self.add_child("github_labels")
 
 
 Node.register(GithubRepositoryNode())
