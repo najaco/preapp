@@ -35,5 +35,8 @@
     },
     "github_labels": {
         "organization": "default"
+    },
+    "output": {
+        "save": true
     }
 }

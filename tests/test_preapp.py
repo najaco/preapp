@@ -6,7 +6,7 @@ from typing import Dict, Any
 import os
 
 
-@pytest.mark.skip()
+# @pytest.mark.skip()
 def test_preapp_react():
     # run command
     process = subprocess.Popen(
@@ -24,9 +24,9 @@ def test_preapp_react():
     credentials_fp.close()
 
     github_username: str = credentials["username"]
-    github_password: str = credentials["password"]
+    github_auth: str = credentials["oauth_token"]
 
-    github_object = Github(github_username, github_password)
+    github_object = Github(github_auth)
 
     assert github_object.get_user().get_repo("test")
 
