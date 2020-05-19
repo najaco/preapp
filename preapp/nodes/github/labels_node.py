@@ -1,6 +1,6 @@
 from preapp import Node, ListQuestion
 from github import Github
-from preapp.utils import __assets_directory__
+from preapp.utils import __assets_directory__, get_authenticated_user
 from typing import Dict, Any
 import json
 
@@ -23,18 +23,21 @@ class GithubLabelsNode(Node):
 
     def post_process(self, responses):
         if responses["organization"] == "PST":
-            github_username: str = self.get_full_response()["github_credentials"]["username"]
-            github_password: str = self.get_full_response()["github_credentials"]["password"]
+            # github_username: str = self.get_full_response()["github_credentials"]["username"]
+            # github_password: str = self.get_full_response()["github_credentials"]["password"]
             repo_name: str = self.get_full_response()["metadata"]["name"]
 
-            remove_all_labels(github_username, github_password, repo_name)
+            # remove_all_labels(github_username, github_password, repo_name)
+            remove_all_labels(repo_name)
 
             pst_src: TextIOWrapper = open(f"{__assets_directory__}/github/labels/pst.json", "r")
             pst_data = json.load(pst_src)
             pst_src.close()
 
-            github_object = Github(github_username, github_password)
-            repo_object = github_object.get_user().get_repo(repo_name)
+            # github_object = Github(github_username, github_password)
+            # repo_object = github_object.get_user().get_repo(repo_name)
+            github_user: AuthenticatedUser = get_authenticated_user()
+            repo_object = github_user.get_repo(repo_name)
 
             for item in pst_data:
                 repo_object.create_label(item["name"], item["color"], item["description"])
@@ -43,7 +46,10 @@ class GithubLabelsNode(Node):
 Node.register(GithubLabelsNode())
 
 
-def remove_all_labels(github_username: str, github_password: str, repository_name: str) -> None:
-    github_object = Github(github_username, github_password)
-    for label in github_object.get_user().get_repo(repository_name).get_labels():
+# def remove_all_labels(github_username: str, github_password: str, repository_name: str) -> None:
+def remove_all_labels(repository_name: str) -> None:
+    # github_object = Github(github_username, github_password)
+    github_user: AuthenticatedUser = get_authenticated_user()
+
+    for label in github_user.get_repo(repository_name).get_labels():
         label.delete()

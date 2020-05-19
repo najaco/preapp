@@ -1,5 +1,6 @@
 from ... import Node, ConfirmQuestion
 from github import Github
+from preapp.utils.github import get_authenticated_user
 
 
 class GithubRepositoryNode(Node):
@@ -14,10 +15,11 @@ class GithubRepositoryNode(Node):
 
     def post_process(self, responses):
         if responses["create"] == True:
-            github_username: str = self.get_full_response()["github_credentials"]["username"]
-            github_password: str = self.get_full_response()["github_credentials"]["password"]
+            # github_username: str = self.get_full_response()["github_credentials"]["username"]
+            # github_password: str = self.get_full_response()["github_credentials"]["password"]
 
-            github_object = Github(github_username, github_password)
+            # github_object = Github(github_username, github_password)
+            github_user: AuthenticatedUser = get_authenticated_user()
 
             repo_name: str = self.get_full_response()["metadata"]["name"]
             repo_description: str = self.get_full_response()["metadata"]["description"]
@@ -27,7 +29,7 @@ class GithubRepositoryNode(Node):
             repo_license: str = self.get_full_response()["metadata"]["license"][1:]
             repo_license = repo_license.partition("]")[0]
 
-            github_object.get_user().create_repo(
+            github_user.create_repo(
                 name=repo_name,
                 description=repo_description,
                 license_template=repo_license,

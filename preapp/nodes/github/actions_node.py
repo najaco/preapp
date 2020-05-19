@@ -22,7 +22,12 @@ class GithubActionsNode(Node):
             if "web" in frameworks:
                 project_name: str = self.get_full_response()["metadata"]["name"]
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
-                github_password: str = self.get_full_response()["github_credentials"]["password"]
+                github_auth: str = ""
+
+                if "password" in self.get_full_response()["github_credentials"]:
+                    github_auth = self.get_full_response()["github_credentials"]["password"]
+                if "oauth_token" in self.get_full_response()["github_credentials"]:
+                    github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
                 process = subprocess.Popen(
                     f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
@@ -37,7 +42,7 @@ class GithubActionsNode(Node):
                         f"{dirname}/../../assets/react/nodejs.yml",
                         project_name,
                         github_username,
-                        github_password,
+                        github_auth,
                     )
 
                 if frameworks["web"] == "angular":
@@ -87,7 +92,7 @@ class GithubActionsNode(Node):
                         f"{dirname}/../../assets/angular/nodejs.yml",
                         project_name,
                         github_username,
-                        github_password,
+                        github_auth,
                     )
 
                 if frameworks["web"] == "vue":
@@ -95,7 +100,7 @@ class GithubActionsNode(Node):
                         f"{dirname}/../../assets/vue/nodejs.yml",
                         project_name,
                         github_username,
-                        github_password,
+                        github_auth,
                     )
 
 

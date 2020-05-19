@@ -27,7 +27,12 @@ class FrameworkNode(Node):
                 stdout, _ = process.communicate()
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
-                github_password: str = self.get_full_response()["github_credentials"]["password"]
+                github_auth: str = ""
+                if "password" in self.get_full_response()["github_credentials"]:
+                    github_auth = self.get_full_response()["github_credentials"]["password"]
+                if "oauth_token" in self.get_full_response()["github_credentials"]:
+                    github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
+
                 # repo_download_url: str = f"https://github.com/{github_username}/{project_name}.git"
                 # process = subprocess.Popen(
                 #     f"git clone {repo_download_url} && cd {project_name} && npx create-react-app website",  # && git add . && git commit -m "Initialized React" && git push https://{github_username}:{github_password}@github.com/{github_username}/{project_name}.git',
@@ -47,7 +52,7 @@ class FrameworkNode(Node):
                     "Initialized React",
                     project_name,
                     github_username,
-                    github_password,
+                    github_auth,
                     directory=project_name,
                 )
 
@@ -66,7 +71,7 @@ class FrameworkNode(Node):
                 stdout, _ = process.communicate()
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
-                github_password: str = self.get_full_response()["github_credentials"]["password"]
+                github_auth: str = self.get_full_response()["github_credentials"]["password"]
 
                 process = subprocess.Popen(
                     f"cd {project_name} && ng new website", shell=True, stdout=subprocess.PIPE,
@@ -77,7 +82,7 @@ class FrameworkNode(Node):
                     "Initialized Angular",
                     project_name,
                     github_username,
-                    github_password,
+                    github_auth,
                     directory=project_name,
                 )
 
@@ -100,7 +105,7 @@ class FrameworkNode(Node):
                 stdout, _ = process.communicate()
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
-                github_password: str = self.get_full_response()["github_credentials"]["password"]
+                github_auth: str = self.get_full_response()["github_credentials"]["password"]
 
                 process = subprocess.Popen(
                     f"cd {project_name} && vue create -d website",
@@ -113,7 +118,7 @@ class FrameworkNode(Node):
                     "Initialized Vue",
                     project_name,
                     github_username,
-                    github_password,
+                    github_auth,
                     directory=project_name,
                 )
 
