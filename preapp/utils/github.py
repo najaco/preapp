@@ -1,4 +1,24 @@
 import subprocess
+import github
+
+
+_CACHED_AUTHENTICATED_USER: github.AuthenticatedUser = None
+
+
+def get_authenticated_user(
+    username: str = None, password: str = None, oauth_token: str = None
+) -> github.AuthenticatedUser:
+    global _CACHED_AUTHENTICATED_USER
+
+    if oauth_token != None:
+        _CACHED_AUTHENTICATED_USER = github.Github(oauth_token).get_user()
+    if username != None and password != None:
+        _CACHED_AUTHENTICATED_USER = github.Github(username, password).get_user()
+
+    if _CACHED_AUTHENTICATED_USER == None:
+        raise PermissionError("No user has been authenticated")
+
+    return _CACHED_AUTHENTICATED_USER
 
 
 def clone(project_owner: str, project_name: str) -> None:
