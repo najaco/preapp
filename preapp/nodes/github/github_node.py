@@ -6,9 +6,7 @@ class GithubNode(Node):
 
     def __init__(self):
         super(GithubNode, self).__init__(
-            "github",
-            [ConfirmQuestion("use", "Do you want to connect your github?", True)],
-            serializable=False,
+            "github", [ConfirmQuestion("use", "Do you want to connect your github?", True)],
         )
 
     def post_process(self, responses):
