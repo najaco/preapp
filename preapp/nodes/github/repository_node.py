@@ -15,10 +15,6 @@ class GithubRepositoryNode(Node):
 
     def post_process(self, responses):
         if responses["create"] == True:
-            # github_username: str = self.get_full_response()["github_credentials"]["username"]
-            # github_password: str = self.get_full_response()["github_credentials"]["password"]
-
-            # github_object = Github(github_username, github_password)
             github_user: AuthenticatedUser = get_authenticated_user()
 
             repo_name: str = self.get_full_response()["metadata"]["name"]

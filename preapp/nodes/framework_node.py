@@ -33,14 +33,6 @@ class FrameworkNode(Node):
                 if "oauth_token" in self.get_full_response()["github_credentials"]:
                     github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
-                # repo_download_url: str = f"https://github.com/{github_username}/{project_name}.git"
-                # process = subprocess.Popen(
-                #     f"git clone {repo_download_url} && cd {project_name} && npx create-react-app website",  # && git add . && git commit -m "Initialized React" && git push https://{github_username}:{github_password}@github.com/{github_username}/{project_name}.git',
-                #     shell=True,
-                #     stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
-
                 process = subprocess.Popen(
                     f"cd {project_name} && npx create-react-app website",
                     shell=True,
