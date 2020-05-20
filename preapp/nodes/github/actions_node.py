@@ -4,7 +4,7 @@ import subprocess
 import os
 from preapp.utils import commit_and_push
 import json
-from preapp.utils.fileio import file_to_json, raw_to_json_file
+from preapp.utils.fileio import copy_file, file_to_json, raw_to_json_file
 from preapp.utils.miscellaneous import bash
 
 
@@ -61,15 +61,19 @@ class GithubActionsNode(Node):
 
                     # update karma.conf file
                     dirname, filename = os.path.split(os.path.abspath(__file__))
-                    karma_src_file: TextIOWrapper = open(
-                        f"{dirname}/../../assets/angular/karma.conf.js", "r"
+                    # karma_src_file: TextIOWrapper = open(
+                    #     f"{dirname}/../../assets/angular/karma.conf.js", "r"
+                    # )
+                    # karma_dest_file: TextIOWrapper = open(
+                    #     f"{os.getcwd()}/{project_name}/website/karma.conf.js", "w",
+                    # )
+                    # karma_dest_file.write("".join(karma_src_file.readlines()))
+                    # karma_src_file.close()
+                    # karma_dest_file.close()
+                    copy_file(
+                        f"{dirname}/../../assets/angular/karma.conf.js",
+                        f"{os.getcwd()}/{project_name}/website/karma.conf.js",
                     )
-                    karma_dest_file: TextIOWrapper = open(
-                        f"{os.getcwd()}/{project_name}/website/karma.conf.js", "w",
-                    )
-                    karma_dest_file.write("".join(karma_src_file.readlines()))
-                    karma_src_file.close()
-                    karma_dest_file.close()
 
                     # update package.json
                     raw_json: Dict[str, Any] = file_to_json(
@@ -115,14 +119,15 @@ Node.register(GithubActionsNode())
 def commit_actions_file(
     actions_filepath: str, project_name: str, github_username: str, github_password: str
 ) -> None:
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    actions_src_file: TextIOWrapper = open(actions_filepath, "r")
-    actions_dest_file: TextIOWrapper = open(
-        f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml", "w+",
-    )
-    actions_dest_file.write("".join(actions_src_file.readlines()))
-    actions_src_file.close()
-    actions_dest_file.close()
+    # dirname, filename = os.path.split(os.path.abspath(__file__))
+    # actions_src_file: TextIOWrapper = open(actions_filepath, "r")
+    # actions_dest_file: TextIOWrapper = open(
+    #     f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml", "w",
+    # )
+    # actions_dest_file.write("".join(actions_src_file.readlines()))
+    # actions_src_file.close()
+    # actions_dest_file.close()
+    copy_file(actions_filepath, f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml")
 
     commit_and_push(
         "Setup Github Actions",

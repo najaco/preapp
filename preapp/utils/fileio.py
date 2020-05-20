@@ -20,3 +20,11 @@ def raw_to_json_file(file_path: str, raw_json: Dict[str, Any]) -> None:
 
 def str_to_json_file(file_path: str, raw_json: str) -> None:
     raw_to_json_file(file_path, json.loads(raw_json))
+
+
+def copy_file(src_file: str, dest_file: str) -> None:
+    src_fp: TextIOWrapper = open(src_file, "r")
+    dest_fp: TextIOWrapper = open(dest_file, "w")
+    dest_fp.write("".join(src_fp.readlines()))
+    src_fp.close()
+    dest_fp.close()
