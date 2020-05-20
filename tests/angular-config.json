@@ -1,0 +1,42 @@
+{
+    "platform": {
+        "software": [
+            "web"
+        ],
+        "hardware": [
+            "Mac",
+            "Linux",
+            "Windows"
+        ]
+    },
+    "framework": {
+        "web": "angular"
+    },
+    "nodejs": {
+        "node": "12.16.2",
+        "npm": "6.14.4"
+    },
+    "metadata": {
+        "name": "test",
+        "description": "test",
+        "owner": "test",
+        "owner_email": "test",
+        "license": "[mit]: MIT License",
+        "version": "0.0.1"
+    },
+    "github": {
+        "use": true
+    },
+    "github_repository": {
+        "create": true
+    },
+    "github_actions": {
+        "use": true
+    },
+    "github_labels": {
+        "organization": "default"
+    },
+    "output": {
+        "save": true
+    }
+}
