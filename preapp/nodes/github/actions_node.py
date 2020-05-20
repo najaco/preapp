@@ -4,7 +4,7 @@ import subprocess
 import os
 from preapp.utils import commit_and_push
 import json
-from preapp.utils.fileio import file_to_json
+from preapp.utils.fileio import file_to_json, raw_to_json_file
 
 
 class GithubActionsNode(Node):
@@ -81,11 +81,13 @@ class GithubActionsNode(Node):
                         "build:ci"
                     ] = "npm run clean && npm run test && npm run build:prod"
 
-                    package_dest: TextIOWrapper = open(
-                        f"{os.getcwd()}/{project_name}/website/package.json", "w",
-                    )
-                    json.dump(raw_json, package_dest, indent=4)
-                    package_dest.close()
+                    # package_dest: TextIOWrapper = open(
+                    #     f"{os.getcwd()}/{project_name}/website/package.json", "w",
+                    # )
+                    # json.dump(raw_json, package_dest, indent=4)
+                    # package_dest.close()
+
+                    raw_to_json_file(f"{os.getcwd()}/{project_name}/website/package.json", raw_json)
 
                     commit_actions_file(
                         f"{dirname}/../../assets/angular/nodejs.yml",

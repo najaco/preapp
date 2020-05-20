@@ -2,6 +2,7 @@ from .. import Node, ConfirmQuestion
 from typing import Dict, Any
 import json
 import sys
+from preapp.utils.fileio import raw_to_json_file
 
 
 class OutputNode(Node):
@@ -27,11 +28,13 @@ class OutputNode(Node):
                     print_data[key] = value
 
             project_name: str = self.get_full_response()["metadata"]["name"]
-            data_str: str = json.dumps(print_data)
+            # data_str: str = json.dumps(print_data)
 
-            file_pointer: TextIOWrapper = open(f"{project_name}/preapp_config.json", "w+")
-            file_pointer.write(data_str)
-            file_pointer.close()
+            # file_pointer: TextIOWrapper = open(f"{project_name}/preapp_config.json", "w+")
+            # file_pointer.write(data_str)
+            # file_pointer.close()
+
+            raw_to_json_file(f"{project_name}/preapp_config.json", print_data)
 
 
 Node.register(OutputNode())
