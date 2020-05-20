@@ -5,6 +5,7 @@ import os
 from preapp.utils import commit_and_push
 import json
 from preapp.utils.fileio import file_to_json, raw_to_json_file
+from preapp.utils.miscellaneous import bash
 
 
 class GithubActionsNode(Node):
@@ -30,12 +31,14 @@ class GithubActionsNode(Node):
                 if "oauth_token" in self.get_full_response()["github_credentials"]:
                     github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
-                process = subprocess.Popen(
-                    f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
-                    shell=True,
-                    stdout=subprocess.PIPE,
-                )
-                stdout, _ = process.communicate()
+                # process = subprocess.Popen(
+                #     f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
+                #     shell=True,
+                #     stdout=subprocess.PIPE,
+                # )
+                # stdout, _ = process.communicate()
+                bash(f"cd {project_name} && mkdir .github && cd .github && mkdir workflows")
+
                 dirname, _ = os.path.split(os.path.abspath(__file__))
 
                 if frameworks["web"] == "react":
@@ -48,12 +51,13 @@ class GithubActionsNode(Node):
 
                 if frameworks["web"] == "angular":
                     # add additional library for github actions testing
-                    process = subprocess.Popen(
-                        f"cd {project_name}/website && npm install puppeteer --save-dev",
-                        shell=True,
-                        stdout=subprocess.PIPE,
-                    )
-                    stdout, _ = process.communicate()
+                    # process = subprocess.Popen(
+                    #     f"cd {project_name}/website && npm install puppeteer --save-dev",
+                    #     shell=True,
+                    #     stdout=subprocess.PIPE,
+                    # )
+                    # stdout, _ = process.communicate()
+                    bash(f"cd {project_name}/website && npm install puppeteer --save-dev")
 
                     # update karma.conf file
                     dirname, filename = os.path.split(os.path.abspath(__file__))

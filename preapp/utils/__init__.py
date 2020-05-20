@@ -5,3 +5,4 @@ from .fileio import (
     raw_to_json_file,
     str_to_json_file,
 )
+from .miscellaneous import bash
