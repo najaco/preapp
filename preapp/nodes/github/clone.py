@@ -19,10 +19,6 @@ class GithubCloneNode(Node):
         project_name: str = self.get_full_response()["metadata"]["name"]
         github_username: str = self.get_full_response()["github_credentials"]["username"]
         repo_download_url: str = f"https://github.com/{github_username}/{project_name}.git"
-        # process = subprocess.Popen(
-        #     f"git clone {repo_download_url}", shell=True, stdout=subprocess.PIPE,
-        # )
-        # stdout, _ = process.communicate()
         bash(f"git clone {repo_download_url}")
 
 

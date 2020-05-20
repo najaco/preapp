@@ -31,12 +31,6 @@ class GithubActionsNode(Node):
                 if "oauth_token" in self.get_full_response()["github_credentials"]:
                     github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
-                # process = subprocess.Popen(
-                #     f"cd {project_name} && mkdir .github && cd .github && mkdir workflows",
-                #     shell=True,
-                #     stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"cd {project_name} && mkdir .github && cd .github && mkdir workflows")
 
                 dirname, _ = os.path.split(os.path.abspath(__file__))
@@ -51,25 +45,10 @@ class GithubActionsNode(Node):
 
                 if frameworks["web"] == "angular":
                     # add additional library for github actions testing
-                    # process = subprocess.Popen(
-                    #     f"cd {project_name}/website && npm install puppeteer --save-dev",
-                    #     shell=True,
-                    #     stdout=subprocess.PIPE,
-                    # )
-                    # stdout, _ = process.communicate()
                     bash(f"cd {project_name}/website && npm install puppeteer --save-dev")
 
                     # update karma.conf file
                     dirname, filename = os.path.split(os.path.abspath(__file__))
-                    # karma_src_file: TextIOWrapper = open(
-                    #     f"{dirname}/../../assets/angular/karma.conf.js", "r"
-                    # )
-                    # karma_dest_file: TextIOWrapper = open(
-                    #     f"{os.getcwd()}/{project_name}/website/karma.conf.js", "w",
-                    # )
-                    # karma_dest_file.write("".join(karma_src_file.readlines()))
-                    # karma_src_file.close()
-                    # karma_dest_file.close()
                     copy_file(
                         f"{dirname}/../../assets/angular/karma.conf.js",
                         f"{os.getcwd()}/{project_name}/website/karma.conf.js",
@@ -88,12 +67,6 @@ class GithubActionsNode(Node):
                     raw_json["scripts"][
                         "build:ci"
                     ] = "npm run clean && npm run test && npm run build:prod"
-
-                    # package_dest: TextIOWrapper = open(
-                    #     f"{os.getcwd()}/{project_name}/website/package.json", "w",
-                    # )
-                    # json.dump(raw_json, package_dest, indent=4)
-                    # package_dest.close()
 
                     raw_to_json_file(f"{os.getcwd()}/{project_name}/website/package.json", raw_json)
 
@@ -119,14 +92,6 @@ Node.register(GithubActionsNode())
 def commit_actions_file(
     actions_filepath: str, project_name: str, github_username: str, github_password: str
 ) -> None:
-    # dirname, filename = os.path.split(os.path.abspath(__file__))
-    # actions_src_file: TextIOWrapper = open(actions_filepath, "r")
-    # actions_dest_file: TextIOWrapper = open(
-    #     f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml", "w",
-    # )
-    # actions_dest_file.write("".join(actions_src_file.readlines()))
-    # actions_src_file.close()
-    # actions_dest_file.close()
     copy_file(actions_filepath, f"{os.getcwd()}/{project_name}/.github/workflows/nodejs.yml")
 
     commit_and_push(

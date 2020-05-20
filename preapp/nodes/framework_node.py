@@ -22,10 +22,6 @@ class FrameworkNode(Node):
         if "web" in responses and responses["web"] == "react":
             project_name: str = self.get_full_response()["metadata"]["name"]
             if not self.get_full_response()["github"]["use"]:
-                # process = subprocess.Popen(
-                #     "npx create-react-app " + project_name, shell=True, stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"npx create-react-app {project_name}")
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
@@ -35,12 +31,6 @@ class FrameworkNode(Node):
                 if "oauth_token" in self.get_full_response()["github_credentials"]:
                     github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
-                # process = subprocess.Popen(
-                #     f"cd {project_name} && npx create-react-app website",
-                #     shell=True,
-                #     stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"cd {project_name} && npx create-react-app website")
 
                 commit_and_push(
@@ -53,29 +43,14 @@ class FrameworkNode(Node):
 
         if "web" in responses and responses["web"] == "angular":
             project_name: str = self.get_full_response()["metadata"]["name"]
-            # assert that angular is installed
-            # process = subprocess.Popen(
-            #     "npm install -g @angular/cli", shell=True, stdout=subprocess.PIPE
-            # )
-            # stdout, _ = process.communicate()
             bash("npm install -g @angular/cli")
 
             if not self.get_full_response()["github"]["use"]:
-                # process = subprocess.Popen(
-                #     "ng new " + project_name, shell=True, stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"ng new {project_name}")
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
                 github_auth: str = self.get_full_response()["github_credentials"]["password"]
 
-                # process = subprocess.Popen(
-                #     f"cd {project_name} && ng new website",
-                #     shell=True,
-                #     stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"cd {project_name} && ng new website")
 
                 commit_and_push(
@@ -89,35 +64,17 @@ class FrameworkNode(Node):
         if "web" in responses and responses["web"] == "vue":
             project_name: str = self.get_full_response()["metadata"]["name"]
             # assert that vue is installed
-            # process = subprocess.Popen(
-            #     "npm install -g vue", shell=True, stdout=subprocess.PIPE
-            # )
-            # stdout, _ = process.communicate()
             bash("npm install -g vue")
 
             # assert the vue cli is installed
-            # process = subprocess.Popen(
-            #     "npm install -g @vue/cli", shell=True, stdout=subprocess.PIPE
-            # )
-            # stdout, _ = process.communicate()
             bash("npm install -g @vue/cli")
 
             if not self.get_full_response()["github"]["use"]:
-                # process = subprocess.Popen(
-                #     "vue create -d " + project_name, shell=True, stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"vue create -d {project_name}")
             else:
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
                 github_auth: str = self.get_full_response()["github_credentials"]["password"]
 
-                # process = subprocess.Popen(
-                #     f"cd {project_name} && vue create -d website",
-                #     shell=True,
-                #     stdout=subprocess.PIPE,
-                # )
-                # stdout, _ = process.communicate()
                 bash(f"cd {project_name} && vue create -d website")
 
                 commit_and_push(
