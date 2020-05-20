@@ -1,6 +1,7 @@
 from .. import Node
 import json
 from typing import Dict, Any
+from preapp.utils.fileio import file_to_json
 
 
 class RootNode(Node):
@@ -15,16 +16,8 @@ class RootNode(Node):
 
     def pre_process(self):
         if self.preset != None:
-            config_fp: TextIOWrapper = open(self.preset, "r")
-            config_json: Dict[str, Any] = json.load(config_fp)
-            config_fp.close()
-
-            for key, value in config_json.items():
+            for key, value in file_to_json(self.preset).items():
                 Node._full_response[key] = value
 
         if self.credentials != None:
-            credentials_fp = open(self.credentials, "r")
-            credentials_json: Dict[str, Any] = json.load(credentials_fp)
-            credentials_fp.close()
-
-            Node._full_response["github_credentials"] = credentials_json
+            Node._full_response["github_credentials"] = file_to_json(self.credentials)

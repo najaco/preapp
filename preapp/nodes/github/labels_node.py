@@ -3,6 +3,7 @@ from github import Github
 from preapp.utils import __assets_directory__, get_authenticated_user
 from typing import Dict, Any
 import json
+from preapp.utils.fileio import file_to_json
 
 
 class GithubLabelsNode(Node):
@@ -27,14 +28,10 @@ class GithubLabelsNode(Node):
 
             remove_all_labels(repo_name)
 
-            pst_src: TextIOWrapper = open(f"{__assets_directory__}/github/labels/pst.json", "r")
-            pst_data = json.load(pst_src)
-            pst_src.close()
-
             github_user: AuthenticatedUser = get_authenticated_user()
             repo_object = github_user.get_repo(repo_name)
 
-            for item in pst_data:
+            for item in file_to_json(f"{__assets_directory__}/github/labels/pst.json"):
                 repo_object.create_label(item["name"], item["color"], item["description"])
 
 

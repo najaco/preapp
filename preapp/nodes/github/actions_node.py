@@ -4,6 +4,7 @@ import subprocess
 import os
 from preapp.utils import commit_and_push
 import json
+from preapp.utils.fileio import file_to_json
 
 
 class GithubActionsNode(Node):
@@ -67,11 +68,9 @@ class GithubActionsNode(Node):
                     karma_dest_file.close()
 
                     # update package.json
-                    package_src: TextIOWrapper = open(
-                        f"{os.getcwd()}/{project_name}/website/package.json", "r",
+                    raw_json: Dict[str, Any] = file_to_json(
+                        f"{os.getcwd()}/{project_name}/website/package.json"
                     )
-                    raw_json: Dict[str, Any] = json.load(package_src)
-                    package_src.close()
 
                     raw_json["scripts"]["clean"] = "rimraf ./dist"
                     raw_json["scripts"]["build:prod"] = "ng build --prod"
