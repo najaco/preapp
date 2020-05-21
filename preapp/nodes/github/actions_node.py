@@ -20,8 +20,8 @@ class GithubActionsNode(Node):
 
     def post_process(self, responses):
         if responses["use"] == True:
-            frameworks: List[str] = self.get_full_response()["framework"]
-            if "web" in frameworks:
+            frameworks: Dict[str, Any] = self.get_full_response()["framework"]
+            if "web_frontend" in frameworks:
                 project_name: str = self.get_full_response()["metadata"]["name"]
                 github_username: str = self.get_full_response()["github_credentials"]["username"]
                 github_auth: str = ""
@@ -35,7 +35,7 @@ class GithubActionsNode(Node):
 
                 dirname, _ = os.path.split(os.path.abspath(__file__))
 
-                if frameworks["web"] == "react":
+                if frameworks["web_frontend"] == "react":
                     commit_actions_file(
                         f"{dirname}/../../assets/react/nodejs.yml",
                         project_name,
@@ -43,7 +43,7 @@ class GithubActionsNode(Node):
                         github_auth,
                     )
 
-                if frameworks["web"] == "angular":
+                if frameworks["web_frontend"] == "angular":
                     # add additional library for github actions testing
                     bash(f"cd {project_name}/website && npm install puppeteer --save-dev")
 
@@ -77,7 +77,7 @@ class GithubActionsNode(Node):
                         github_auth,
                     )
 
-                if frameworks["web"] == "vue":
+                if frameworks["web_frontend"] == "vue":
                     commit_actions_file(
                         f"{dirname}/../../assets/vue/nodejs.yml",
                         project_name,
