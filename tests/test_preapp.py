@@ -6,7 +6,7 @@ from typing import Dict, Any
 import os
 
 
-def run_config(config_file: str) -> None:
+def setup(config_file: str) -> None:
     process = subprocess.Popen(
         f"python -m preapp --preset {config_file} --credentials {os.getcwd()}/tests/credentials.json",
         shell=True,
@@ -15,12 +15,14 @@ def run_config(config_file: str) -> None:
     stdout, _ = process.communicate()
 
 
-def cleanup(github_object: Github) -> None:
+def teardown(github_object: Github) -> None:
     # delete github repo
     github_object.get_user().get_repo("test").delete()
 
     # delete local folder
-    process = subprocess.Popen(f"rm -rf {os.getcwd()}/test", shell=True, stdout=subprocess.PIPE,)
+    process = subprocess.Popen(
+        f"rm -rf {os.getcwd()}/test", shell=True, stdout=subprocess.PIPE,
+    )
     stdout, _ = process.communicate()
 
 
@@ -35,21 +37,29 @@ def get_github_object() -> Github:
     return Github(github_auth)
 
 
-def __test_web_framework(framework: str):
-    run_config(f"{os.getcwd()}/tests/{framework}-config.json")
+@pytest.fixture(scope="function", params=["react", "angular", "vue"])
+def web_framework(request):
+    setup(f"{os.getcwd()}/tests/{request.param}-config.json")
+    yield web_framework
+    teardown(get_github_object())
+
+
+def test_web(web_framework):
+    # checks for initial git files
     assert os.path.isdir(f"{os.getcwd()}/test")
+    assert os.path.isfile(f"{os.getcwd()}/test/README.md")
+    assert os.path.isfile(f"{os.getcwd()}/test/LICENSE")
+    assert os.path.isfile(f"{os.getcwd()}/test/.gitignore")
+
+    # checks for website folder
+    assert os.path.isdir(f"{os.getcwd()}/test/website")
+
+    # checks for github actions file
+    assert os.path.isfile(f"{os.getcwd()}/test/.github/workflows/nodejs.yml")
+
+    # checks for repository
     github_object = get_github_object()
-    assert github_object.get_user().get_repo("test")
-    cleanup(github_object)
-
-
-def test_preapp_react():
-    __test_web_framework("react")
-
-
-def test_preapp_angular():
-    __test_web_framework("angular")
-
-
-def test_preapp_vue():
-    __test_web_framework("vue")
+    assert (
+        github_object.get_user().get_repo("test").get_commits(sha="master").totalCount
+        == 5
+    )
