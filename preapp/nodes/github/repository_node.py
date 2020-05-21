@@ -9,7 +9,11 @@ class GithubRepositoryNode(Node):
     def __init__(self):
         super(GithubRepositoryNode, self).__init__(
             "github_repository",
-            [ConfirmQuestion("create", "Do you want to create a github repository?", True)],
+            [
+                ConfirmQuestion(
+                    "create", "Do you want to create a github repository?", True
+                )
+            ],
             parents=["github", "github_credentials"],
         )
 
@@ -30,6 +34,10 @@ class GithubRepositoryNode(Node):
                 description=repo_description,
                 license_template=repo_license,
                 auto_init=True,
+            )
+
+            github_user.get_repo(repo_name).create_file(
+                ".gitignore", "Added gitignore", "# .gitignore created by preapp"
             )
 
             # allow for github actions to be added
