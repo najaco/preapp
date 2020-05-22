@@ -2,7 +2,7 @@ import subprocess
 from .. import Node, ListQuestion
 from ..utils import commit_and_push, __assets_directory__
 from preapp.utils.miscellaneous import bash
-from preapp.utils.fileio import copy_file
+from preapp.utils.fileio import copy_file, file_to_text, text_to_file
 import os
 
 
@@ -113,6 +113,24 @@ class FrameworkNode(Node):
                 f"{__assets_directory__}/python/module/setup.py",
                 f"{os.getcwd()}/{project_name}/backend/setup.py",
             )
+
+            source: str = file_to_text(f"{os.getcwd()}/{project_name}/backend/setup.py")
+            source = source.replace("__NAME__", self.get_full_response()["metadata"]["name"])
+            source = source.replace("__VERSION__", self.get_full_response()["metadata"]["version"])
+            source = source.replace(
+                "__DESCRIPTION__", self.get_full_response()["metadata"]["description"]
+            )
+            source = source.replace("__AUTHOR__", self.get_full_response()["metadata"]["owner"])
+            source = source.replace(
+                "__EMAIL__", self.get_full_response()["metadata"]["owner_email"]
+            )
+            source = source.replace(
+                "__LICENSE__",
+                self.get_full_response()["metadata"]["license"][1:].partition("]")[0].upper(),
+            )
+
+            text_to_file(source, f"{os.getcwd()}/{project_name}/backend/setup.py")
+
             copy_file(
                 f"{__assets_directory__}/python/module/noxfile.py",
                 f"{os.getcwd()}/{project_name}/backend/noxfile.py",
