@@ -33,6 +33,9 @@ jobs:
       shell: bash
       env:
         PREAPP_TESTING_OAUTH_TOKEN: ${{secrets.PREAPP_TESTING_OAUTH_TOKEN}}
+    - name: Install Git
+      run: 'sudo apt-get update && sudo apt-get install git && git --version'
+      shell: bash
     - name: Run Nox
       run: |
         nox
