@@ -1,6 +1,7 @@
-from .credentials_node import GithubCredentialsNode
-from .repository_node import GithubRepositoryNode
-from .github_node import GithubNode
-from .actions_node import GithubActionsNode
-from .clone import GithubCloneNode
-from .labels_node import GithubLabelsNode
+__all__ = ["I will get rewritten"]
+# Don't modify the line above, or this line!
+import automodinit
+
+automodinit.automodinit(__name__, __file__, globals())
+del automodinit
+# Anything else you want can go after here, it won't get modified.

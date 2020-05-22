@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 from PyInquirer import prompt, print_json
-from preapp.nodes import RootNode
+from preapp.nodes.root_node import RootNode
 import argparse
 from preapp import Node
 

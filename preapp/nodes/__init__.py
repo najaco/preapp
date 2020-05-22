@@ -1,14 +1,7 @@
-from .output_node import OutputNode
-from .platform_node import PlatformNode
-from .framework_node import FrameworkNode
-from .nodejs_node import NodeJSNode
-from .python_node import PythonNode
-from .metadata_node import MetadataNode
-from .github import (
-    GithubCredentialsNode,
-    GithubRepositoryNode,
-    GithubNode,
-    GithubCloneNode,
-    GithubActionsNode,
-)
-from .root_node import RootNode
+__all__ = ["I will get rewritten"]
+# Don't modify the line above, or this line!
+import automodinit
+
+automodinit.automodinit(__name__, __file__, globals())
+del automodinit
+# Anything else you want can go after here, it won't get modified.

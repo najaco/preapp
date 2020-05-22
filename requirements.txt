@@ -5,3 +5,4 @@ regex==2020.4.4
 six==1.14.0
 wcwidth==0.1.9
 PyGithub==1.50
+automodinit==0.16
