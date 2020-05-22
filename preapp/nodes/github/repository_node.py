@@ -9,11 +9,7 @@ class GithubRepositoryNode(Node):
     def __init__(self):
         super(GithubRepositoryNode, self).__init__(
             "github_repository",
-            [
-                ConfirmQuestion(
-                    "create", "Do you want to create a github repository?", True
-                )
-            ],
+            [ConfirmQuestion("create", "Do you want to create a github repository?", True)],
             parents=["github", "github_credentials"],
         )
 
