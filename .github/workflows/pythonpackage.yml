@@ -33,8 +33,8 @@ jobs:
       shell: bash
       env:
         PREAPP_TESTING_OAUTH_TOKEN: ${{secrets.PREAPP_TESTING_OAUTH_TOKEN}}
-    - name: Install Git
-      run: 'sudo apt-get update && sudo apt-get install git && git --version'
+    - name: Configure Git
+      run: 'git config --global user.email "davi1138@purdue.edu" && git config --global user.name "stephend017"'
       shell: bash
     - name: Run Nox
       run: |
