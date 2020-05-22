@@ -52,7 +52,7 @@ class FrameworkNode(Node):
 
         if "web_frontend" in responses and responses["web_frontend"] == "angular":
             project_name: str = self.get_full_response()["metadata"]["name"]
-            bash("npm install -g @angular/cli")
+            bash("sudo npm install -g @angular/cli")
 
             if not self.get_full_response()["github"]["use"]:
                 bash(f"ng new {project_name}")
@@ -77,10 +77,10 @@ class FrameworkNode(Node):
         if "web_frontend" in responses and responses["web_frontend"] == "vue":
             project_name: str = self.get_full_response()["metadata"]["name"]
             # assert that vue is installed
-            bash("npm install -g vue")
+            bash("sudo npm install -g vue")
 
             # assert the vue cli is installed
-            bash("npm install -g @vue/cli")
+            bash("sudo npm install -g @vue/cli")
 
             if not self.get_full_response()["github"]["use"]:
                 bash(f"vue create -d {project_name}")
