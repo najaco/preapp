@@ -6,7 +6,7 @@ from typing import Dict, Any
 import os
 
 
-def setup(config_file: str) -> None:
+def _setup(config_file: str) -> None:
     process = subprocess.Popen(
         f"python -m preapp --preset {config_file} --credentials {os.getcwd()}/tests/credentials.json",
         shell=True,
@@ -15,14 +15,12 @@ def setup(config_file: str) -> None:
     stdout, _ = process.communicate()
 
 
-def teardown(github_object: Github) -> None:
+def _teardown(github_object: Github) -> None:
     # delete github repo
     github_object.get_user().get_repo("test").delete()
 
     # delete local folder
-    process = subprocess.Popen(
-        f"rm -rf {os.getcwd()}/test", shell=True, stdout=subprocess.PIPE,
-    )
+    process = subprocess.Popen(f"rm -rf {os.getcwd()}/test", shell=True, stdout=subprocess.PIPE,)
     stdout, _ = process.communicate()
 
 
@@ -39,27 +37,49 @@ def get_github_object() -> Github:
 
 @pytest.fixture(scope="function", params=["react", "angular", "vue"])
 def web_framework(request):
-    setup(f"{os.getcwd()}/tests/{request.param}-config.json")
+    _setup(f"{os.getcwd()}/tests/{request.param}-config.json")
     yield web_framework
-    teardown(get_github_object())
+    _teardown(get_github_object())
 
 
 def test_web(web_framework):
-    # checks for initial git files
+    # check for initial git files
     assert os.path.isdir(f"{os.getcwd()}/test")
     assert os.path.isfile(f"{os.getcwd()}/test/README.md")
     assert os.path.isfile(f"{os.getcwd()}/test/LICENSE")
     assert os.path.isfile(f"{os.getcwd()}/test/.gitignore")
 
-    # checks for website folder
+    # check for website folder
     assert os.path.isdir(f"{os.getcwd()}/test/website")
 
-    # checks for github actions file
+    # check for github actions file
     assert os.path.isfile(f"{os.getcwd()}/test/.github/workflows/nodejs.yml")
 
-    # checks for repository
+    # check for backend
+    assert os.path.isdir(f"{os.getcwd()}/test/backend")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/requirements.txt")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/noxfile.py")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/setup.py")
+
+    setup_fp: TextIOWrapper = open(f"{os.getcwd()}/test/backend/setup.py", "r")
+    setup_source: str = setup_fp.read()
+
+    assert setup_source.find('name="test"') != -1
+    assert setup_source.find('description="test"') != -1
+    assert setup_source.find('version="0.0.1"') != -1
+    assert setup_source.find('email="test"') != -1
+    assert setup_source.find('license="MIT"') != -1
+    assert setup_source.find('author="test"') != -1
+
+    setup_fp.close()
+
+    assert os.path.isdir(f"{os.getcwd()}/test/backend/tests")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/tests/test_util.py")
+
+    assert os.path.isdir(f"{os.getcwd()}/test/backend/test")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/test/__init__.py")
+    assert os.path.isfile(f"{os.getcwd()}/test/backend/test/__main__.py")
+
+    # check for repository
     github_object = get_github_object()
-    assert (
-        github_object.get_user().get_repo("test").get_commits(sha="master").totalCount
-        == 5
-    )
+    assert github_object.get_user().get_repo("test").get_commits(sha="master").totalCount == 5
