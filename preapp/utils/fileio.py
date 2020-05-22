@@ -28,3 +28,16 @@ def copy_file(src_file: str, dest_file: str) -> None:
     dest_fp.write("".join(src_fp.readlines()))
     src_fp.close()
     dest_fp.close()
+
+
+def file_to_text(file_path: str) -> str:
+    fp: TextIOWrapper = open(file_path, "r")
+    source: str = "".join(fp.readlines())
+    fp.close()
+    return source
+
+
+def text_to_file(text: str, file_path: str) -> None:
+    fp: TextIOWrapper = open(file_path, "w")
+    fp.write(text)
+    fp.close()

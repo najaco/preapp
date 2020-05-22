@@ -5,5 +5,7 @@ from .fileio import (
     raw_to_json_file,
     str_to_json_file,
     copy_file,
+    file_to_text,
+    text_to_file,
 )
 from .miscellaneous import bash
