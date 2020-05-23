@@ -38,7 +38,7 @@ jobs:
       shell: bash
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%H:%M:%S')"
+      run: echo "::set-output name=date::$(date +'%H%M%S')"
     - name: Run Nox
       run: |
         nox -- remote-${{ steps.date.outputs.date }}
