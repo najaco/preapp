@@ -6,6 +6,7 @@ from preapp.utils import commit_and_push
 import json
 from preapp.utils.fileio import copy_file, file_to_json, raw_to_json_file
 from preapp.utils.miscellaneous import bash
+from preapp.hooks import call_hook
 
 
 class GithubActionsNode(Node):
@@ -23,67 +24,69 @@ class GithubActionsNode(Node):
             frameworks: Dict[str, Any] = self.get_full_response()["framework"]
             if "web_frontend" in frameworks:
                 project_name: str = self.get_full_response()["metadata"]["name"]
-                github_username: str = self.get_full_response()["github_credentials"]["username"]
-                github_auth: str = ""
+                # github_username: str = self.get_full_response()["github_credentials"]["username"]
+                # github_auth: str = ""
 
-                if "password" in self.get_full_response()["github_credentials"]:
-                    github_auth = self.get_full_response()["github_credentials"]["password"]
-                if "oauth_token" in self.get_full_response()["github_credentials"]:
-                    github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
+                # if "password" in self.get_full_response()["github_credentials"]:
+                #     github_auth = self.get_full_response()["github_credentials"]["password"]
+                # if "oauth_token" in self.get_full_response()["github_credentials"]:
+                #     github_auth = self.get_full_response()["github_credentials"]["oauth_token"]
 
                 bash(f"cd {project_name} && mkdir .github && cd .github && mkdir workflows")
 
-                dirname, _ = os.path.split(os.path.abspath(__file__))
+                # dirname, _ = os.path.split(os.path.abspath(__file__))
 
-                if frameworks["web_frontend"] == "react":
-                    commit_actions_file(
-                        f"{dirname}/../../assets/react/nodejs.yml",
-                        project_name,
-                        github_username,
-                        github_auth,
-                    )
+                call_hook("github_actions", "web_frontend", frameworks["web_frontend"])
 
-                if frameworks["web_frontend"] == "angular":
-                    # add additional library for github actions testing
-                    bash(f"cd {project_name}/website && npm install puppeteer --save-dev")
+                # if frameworks["web_frontend"] == "react":
+                #     commit_actions_file(
+                #         f"{dirname}/../../assets/react/nodejs.yml",
+                #         project_name,
+                #         github_username,
+                #         github_auth,
+                #     )
 
-                    # update karma.conf file
-                    dirname, filename = os.path.split(os.path.abspath(__file__))
-                    copy_file(
-                        f"{dirname}/../../assets/angular/karma.conf.js",
-                        f"{os.getcwd()}/{project_name}/website/karma.conf.js",
-                    )
+                # if frameworks["web_frontend"] == "angular":
+                #     # add additional library for github actions testing
+                #     bash(f"cd {project_name}/website && npm install puppeteer --save-dev")
 
-                    # update package.json
-                    raw_json: Dict[str, Any] = file_to_json(
-                        f"{os.getcwd()}/{project_name}/website/package.json"
-                    )
+                #     # update karma.conf file
+                #     dirname, filename = os.path.split(os.path.abspath(__file__))
+                #     copy_file(
+                #         f"{dirname}/../../assets/angular/karma.conf.js",
+                #         f"{os.getcwd()}/{project_name}/website/karma.conf.js",
+                #     )
 
-                    raw_json["scripts"]["clean"] = "rimraf ./dist"
-                    raw_json["scripts"]["build:prod"] = "ng build --prod"
-                    raw_json["scripts"][
-                        "test"
-                    ] = "ng test --watch=false --browsers=ChromeHeadlessCustom"
-                    raw_json["scripts"][
-                        "build:ci"
-                    ] = "npm run clean && npm run test && npm run build:prod"
+                #     # update package.json
+                #     raw_json: Dict[str, Any] = file_to_json(
+                #         f"{os.getcwd()}/{project_name}/website/package.json"
+                #     )
 
-                    raw_to_json_file(f"{os.getcwd()}/{project_name}/website/package.json", raw_json)
+                #     raw_json["scripts"]["clean"] = "rimraf ./dist"
+                #     raw_json["scripts"]["build:prod"] = "ng build --prod"
+                #     raw_json["scripts"][
+                #         "test"
+                #     ] = "ng test --watch=false --browsers=ChromeHeadlessCustom"
+                #     raw_json["scripts"][
+                #         "build:ci"
+                #     ] = "npm run clean && npm run test && npm run build:prod"
 
-                    commit_actions_file(
-                        f"{dirname}/../../assets/angular/nodejs.yml",
-                        project_name,
-                        github_username,
-                        github_auth,
-                    )
+                #     raw_to_json_file(f"{os.getcwd()}/{project_name}/website/package.json", raw_json)
 
-                if frameworks["web_frontend"] == "vue":
-                    commit_actions_file(
-                        f"{dirname}/../../assets/vue/nodejs.yml",
-                        project_name,
-                        github_username,
-                        github_auth,
-                    )
+                #     commit_actions_file(
+                #         f"{dirname}/../../assets/angular/nodejs.yml",
+                #         project_name,
+                #         github_username,
+                #         github_auth,
+                #     )
+
+                # if frameworks["web_frontend"] == "vue":
+                #     commit_actions_file(
+                #         f"{dirname}/../../assets/vue/nodejs.yml",
+                #         project_name,
+                #         github_username,
+                #         github_auth,
+                #     )
 
 
 Node.register(GithubActionsNode())

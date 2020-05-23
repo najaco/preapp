@@ -7,3 +7,5 @@ from .question import (
     ListQuestion,
     PasswordQuestion,
 )
+from preapp.hooks import *
+from preapp.technologies import *
