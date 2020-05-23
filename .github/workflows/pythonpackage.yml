@@ -36,9 +36,12 @@ jobs:
     - name: Configure Git
       run: 'git config --global user.email "davi1138@purdue.edu" && git config --global user.name "stephend017"'
       shell: bash
+    - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
     - name: Run Nox
       run: |
-        nox
+        nox -- ${GITHUB_REF##*/}-${{ steps.date.outputs.date }}
     - name: Clean
       run: 'rm -rf tests/credentials.json'
       shell: bash
