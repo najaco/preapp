@@ -24,10 +24,10 @@ def test(session):
     session.install("pytest")
     session.install("pytest-xdist")
     session.install("flaky")
-    
+
     if session.posargs:
         session.run(
             "pytest", "tests/", "-n", "3", "--name", f"test-{session.posargs[0]}",
         )
     else:
-        session.run("pytest")
+        session.run("pytest", "tests/", "-n", "3")
