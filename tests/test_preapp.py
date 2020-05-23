@@ -10,6 +10,9 @@ PROJECT_NAME: str = "test"
 
 
 def _setup_web(web_framework: str, config_file: str) -> None:
+    global PROJECT_NAME
+    PROJECT_NAME = f"{PROJECT_NAME} {web_framework}"
+    
     # update the config file to have the correct information
     config_fp: TextIOWrapper = open(config_file, "r")
     config_file_source: str = config_fp.read()
@@ -22,6 +25,7 @@ def _setup_web(web_framework: str, config_file: str) -> None:
     config_fp: TextIOWrapper = open(new_config_file, "w")
     config_fp.write(config_file_source)
     config_fp.close()
+
 
     process = subprocess.Popen(
         f"python -m preapp --preset {new_config_file} --credentials {os.getcwd()}/tests/credentials.json",
