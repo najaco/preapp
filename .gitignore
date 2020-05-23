@@ -11,4 +11,5 @@ build/
 dist/
 
 credentials.json
+*test-config.json
 test/

@@ -8,21 +8,43 @@ import os
 
 PROJECT_NAME: str = "test"
 
-def _setup(config_file: str) -> None:
+
+def _setup_web(web_framework: str, config_file: str) -> None:
+    # update the config file to have the correct information
+    config_fp: TextIOWrapper = open(config_file, "r")
+    config_file_source: str = config_fp.read()
+    config_fp.close()
+
+    config_file_source = config_file_source.replace("__WEB_FRAMEWORK__", web_framework)
+    config_file_source = config_file_source.replace("__PROJECT_NAME__", PROJECT_NAME)
+
+    new_config_file: str = f"tests/{web_framework}-test-config.json"
+    config_fp: TextIOWrapper = open(new_config_file, "w")
+    config_fp.write(config_file_source)
+    config_fp.close()
+
     process = subprocess.Popen(
-        f"python -m preapp --preset {config_file} --credentials {os.getcwd()}/tests/credentials.json",
+        f"python -m preapp --preset {new_config_file} --credentials {os.getcwd()}/tests/credentials.json",
         shell=True,
         stdout=subprocess.PIPE,
     )
     stdout, _ = process.communicate()
 
 
-def _teardown(github_object: Github) -> None:
+def _teardown_web(github_object: Github) -> None:
     # delete github repo
     github_object.get_user().get_repo(PROJECT_NAME).delete()
 
     # delete local folder
-    process = subprocess.Popen(f"rm -rf {os.getcwd()}/{PROJECT_NAME}", shell=True, stdout=subprocess.PIPE,)
+    process = subprocess.Popen(
+        f"rm -rf {os.getcwd()}/{PROJECT_NAME}", shell=True, stdout=subprocess.PIPE,
+    )
+    stdout, _ = process.communicate()
+
+    # delete generated test files
+    process = subprocess.Popen(
+        f"rm -rf {os.getcwd()}/tests/*test-config.json", shell=True, stdout=subprocess.PIPE,
+    )
     stdout, _ = process.communicate()
 
 
@@ -39,9 +61,9 @@ def get_github_object() -> Github:
 
 @pytest.fixture(scope="function", params=["react", "angular", "vue"])
 def web_framework(request):
-    _setup(f"{os.getcwd()}/tests/{request.param}-config.json")
+    _setup_web(request.param, f"{os.getcwd()}/tests/web-config.json")
     yield web_framework
-    _teardown(get_github_object())
+    _teardown_web(get_github_object())
 
 
 def test_web(web_framework):
