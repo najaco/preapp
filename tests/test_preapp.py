@@ -6,6 +6,7 @@ from typing import Dict, Any
 import os
 from flaky import flaky
 
+
 def _setup_web(project_name: str, web_framework: str, config_file: str) -> None:
     # update the config file to have the correct information
     config_fp: TextIOWrapper = open(config_file, "r")
@@ -69,6 +70,7 @@ def web_framework(name, request):
     _setup_web(project_name, request.param, f"{os.getcwd()}/tests/web-config.json")
     yield project_name
     _teardown_web(project_name, get_github_object())
+
 
 @flaky
 def test_web(web_framework):
