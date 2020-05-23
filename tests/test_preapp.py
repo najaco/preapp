@@ -4,7 +4,7 @@ import subprocess
 from github import Github
 from typing import Dict, Any
 import os
-
+from flaky import flaky
 
 def _setup_web(project_name: str, web_framework: str, config_file: str) -> None:
     # update the config file to have the correct information
@@ -70,7 +70,7 @@ def web_framework(name, request):
     yield project_name
     _teardown_web(project_name, get_github_object())
 
-
+@flaky
 def test_web(web_framework):
     # check for initial git files
     assert os.path.isdir(f"{os.getcwd()}/{web_framework}")
