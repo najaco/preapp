@@ -59,8 +59,16 @@ def get_github_object() -> Github:
     return Github(github_auth)
 
 
+@pytest.fixture()
+def name(pytestconfig):
+    return pytestconfig.getoption("name")
+
+
+@pytest.mark.parametrize("name", ["name"])
 @pytest.fixture(scope="function", params=["react", "angular", "vue"])
-def web_framework(request):
+def web_framework(name, request):
+    global PROJECT_NAME
+    PROJECT_NAME = name
     _setup_web(request.param, f"{os.getcwd()}/tests/web-config.json")
     yield web_framework
     _teardown_web(get_github_object())

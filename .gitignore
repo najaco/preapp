@@ -12,4 +12,4 @@ dist/
 
 credentials.json
 *test-config.json
-test/
+test-*
