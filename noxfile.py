@@ -22,8 +22,11 @@ def test(session):
     session.run("pip", "install", "-e", ".")
     session.run("pip", "install", "-r", "requirements.txt")
     session.install("pytest")
+    session.install("pytest-xdist")
 
     if session.posargs:
-        session.run("pytest", "tests/", "--name", f"test-{session.posargs[0]}")
+        session.run(
+            "pytest", "tests/", "-n", "3", "--name", f"test-{session.posargs[0]}",
+        )
     else:
         session.run("pytest")
