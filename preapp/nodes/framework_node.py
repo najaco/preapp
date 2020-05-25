@@ -14,7 +14,14 @@ class FrameworkNode(Node):
         super(FrameworkNode, self).__init__(
             "framework",
             [],
-            parents=["nodejs", "python_interpreter", "platform", "github", "github_clone",],
+            parents=[
+                "nodejs",
+                "python_interpreter",
+                "platform",
+                "github",
+                "github_clone",
+                "features",
+            ],
         )
 
     def pre_process(self):

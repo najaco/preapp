@@ -29,6 +29,7 @@ class PlatformNode(Node):
 
     def pre_process(self):
         self.add_child("framework")
+        self.add_child("features")
 
 
 Node.register(PlatformNode())
