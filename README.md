@@ -1,4 +1,5 @@
 # preapp
+![Python package](https://github.com/stephend017/preapp/workflows/Python%20package/badge.svg)
 a tool to help both users and developers create a software project. 
 
 ## Goals
