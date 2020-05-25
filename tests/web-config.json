@@ -43,5 +43,23 @@
     },
     "output": {
         "save": true
+    },
+    "features": {
+        "accounts": true,
+        "content": false,
+        "data_management": false,
+        "functionality": false,
+        "geo_location": false,
+        "payments": false
+    },
+    "accounts": {
+        "functions": [
+            "create",
+            "authenticate",
+            "recover",
+            "delete"
+        ],
+        "fields":[],
+        "display": []
     }
 }

@@ -116,3 +116,5 @@ def test_web(web_framework):
     assert (
         github_object.get_user().get_repo(web_framework).get_commits(sha="master").totalCount == 5
     )
+
+    assert github_object.get_user().get_repo(web_framework).get_issues().totalCount == 4
