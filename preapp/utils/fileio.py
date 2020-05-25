@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 __assets_directory__: str = f"{os.path.split(os.path.abspath(__file__))[0]}/../assets"
 
@@ -41,3 +41,27 @@ def text_to_file(text: str, file_path: str) -> None:
     fp: TextIOWrapper = open(file_path, "w")
     fp.write(text)
     fp.close()
+
+
+def get_all_assets(
+    directory: str,
+    file_type: str = None,
+    include_file_extension: bool = True,
+    include_full_path: bool = True,
+) -> List[str]:
+    files: List[str] = [
+        f
+        for f in os.listdir(f"{__assets_directory__}/{directory}")
+        if os.path.isfile(os.path.join(f"{__assets_directory__}/{directory}", f))
+    ]
+
+    if file_type != None:
+        files = list(filter(lambda f: f.endswith(file_type), files))
+
+    if include_full_path:
+        files = list(map(lambda f: f"{__assets_directory__}/{directory}/{f}", files))
+
+    if not include_file_extension:
+        files = list(map(lambda f: f.partition(".")[0], files))
+
+    return files

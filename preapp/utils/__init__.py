@@ -7,6 +7,7 @@ from .fileio import (
     copy_file,
     file_to_text,
     text_to_file,
+    get_all_assets,
 )
 from .miscellaneous import bash
 from .database import Database
