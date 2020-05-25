@@ -1,0 +1,63 @@
+{
+    "functions": [
+        {
+            "name": "create",
+            "user_story": "as a user I want to be able to create an account"
+        },
+        {
+            "name": "authenticate",
+            "user_story": "as a user I want to be able to authenticate my account (login)"
+        },
+        {
+            "name": "edit",
+            "user_story": "as a user I want to be able to edit the information in my account"
+        },
+        {
+            "name": "recover",
+            "user_story": "as a user I want to be able to recover my account when I forget my password"
+        },
+        {
+            "name": "delete",
+            "user_story": "as a user I want to be able delete my account and all information stored with it"
+        },
+        {
+            "name": "search",
+            "user_story": "as a user I want to be able to search for other users accounts"
+        },
+        {
+            "name": "sort",
+            "user_story": "as a user I want to be able to sort through a list of accounts"
+        },
+        {
+            "name": "filter",
+            "user_story": "as a user I want to be able filter a list of accounts"
+        },
+        {
+            "name": "share",
+            "user_story": "as a user I want to be able to share my account with other users"
+        }
+    ],
+    "fields": [
+        "friends",
+        "followers",
+        "following",
+        "permissions",
+        "email",
+        "firstname",
+        "lastname",
+        "middlename",
+        "username",
+        "phone-number",
+        "address",
+        "age",
+        "gender",
+        "custom"
+    ],
+    "display": [
+        "small-contianer",
+        "medium-container",
+        "large-container",
+        "list",
+        "page"
+    ]
+}

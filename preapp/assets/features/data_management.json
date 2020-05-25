@@ -1,0 +1,31 @@
+{
+    "types": [
+        "table",
+        "bar-chart",
+        "pie-cahrt",
+        "line-graph",
+        "histogram"
+    ],
+    "file_types": [
+        "xlsx",
+        "csv",
+        "txt"
+    ],
+    "functions": [
+        "import",
+        "export",
+        "sort",
+        "search",
+        "filter",
+        "edit",
+        "delete",
+        "create"
+    ],
+    "display": [
+        "small-contianer",
+        "medium-container",
+        "large-container",
+        "list",
+        "page"
+    ]
+}

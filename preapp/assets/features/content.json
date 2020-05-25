@@ -1,0 +1,34 @@
+{
+    "types": [
+        "manual",
+        "automated",
+        "images",
+        "video",
+        "sound",
+        "text",
+        "numeric"
+    ],
+    "functions": [
+        "create",
+        "edit",
+        "delete",
+        "search",
+        "sort",
+        "filter",
+        "share",
+        "save",
+        "import",
+        "export",
+        "feed"
+    ],
+    "fields": [
+        "permissions"
+    ],
+    "display":[
+        "small-contianer",
+        "medium-container",
+        "large-container",
+        "list",
+        "page"
+    ]
+}

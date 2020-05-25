@@ -1,0 +1,9 @@
+{
+    "types": [
+        "mathematical",
+        "automation",
+        "fileio",
+        "data-management",
+        "custom"
+    ]
+}

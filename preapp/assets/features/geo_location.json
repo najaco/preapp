@@ -1,0 +1,14 @@
+{
+    "functions": [
+        "user-location",
+        "navigation",
+        "search"
+    ],
+    "display":[
+        "small-contianer",
+        "medium-container",
+        "large-container",
+        "list",
+        "page"
+    ]
+}
