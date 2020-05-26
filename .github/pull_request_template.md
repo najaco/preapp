@@ -8,4 +8,4 @@ list all new features / changes this pull request adds
 list all issues that this pull request fixes
 
 ### Notes
-list any notes about this implementation, problems it may produce or future extentions that may need to be added
+list any notes about this implementation, problems it may produce or future extensions that may need to be added
