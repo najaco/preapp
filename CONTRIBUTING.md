@@ -1,90 +1,64 @@
-# PREAPP
-preapp is node based. this design choice is so that you as a developer can utilize work done so far and add new functionality to an existing pipeline. 
+# Contributing to preapp
+Thanks for your interest in contributing to preapp. Pull requests for both bugs and new features are always welcome. 
 
+Our goal is that contributing to preapp is as easy as possible. These guidelines are intended to help contributions as painless as possible.
 
-## Get Started Developing
-preapp is made of nodes and each node contains its own functionality in preapp. here I will outline the basic parameters and functions of each node to help you get started contributing to preapp.
+## Reporting Bugs
+Please use the github issue tracker to report any bugs. Before doing so, make sure to search the current issues for your bug before to prevent duplicate issues.
 
+## Requesting New Features
+Please use the github issue tracker to request any new features. Before doing so, make sure to search the current issues for your feature before to prevent duplicate issues. 
 
-### Important Node parameters
-```python
- # this is the unique string identifier of this node
-name: str
+When requesting a new feature please provide the following
+- what you are trying to accomplish
+- why this feature is needed
+- why current solutions (if they exist) are not viable
+- code snippets of how this feature will be used once implemented
 
-# these are the CLI prompt questions this node needs to execute
-questions: List[Question] 
+## Setting up your Development Environment
+here is a list of what you'll need before you can start development
 
-# this is a list of the names of nodes that need to execute before this node can execute
-parents: List[str] = [],
+- your own fork of [preapp](https://github.com/stephend017/preapp)
+- [python](https://www.python.org/downloads/) version 3.6 or higher
+- [nox](https://nox.thea.codes/en/stable/)
 
-# this is a list of the names of nodes that need to execute after this node has executed
-children: List[str] = [],
+## Contributing a Feature or Bug Fix
+If you've chosen to contribute thats awesome. Here is our recommended workflow for efficiently and effectively contributing.
 
-# this is the priority of this node. this is used to rank nodes executed at the same 
-# level in the tree
-priority: int = 0,
-        
-# this is a flag if the node should write its data to the output file        
-serializable: bool = True,
+1. claim an open issue. this is so everyone knows what you're working on and its a feature or bug fix we want implemented.
+2. rebase your fork with master. this is to keep our git history clean and prevent as many merge conflicts as possible
+3. implement your feature or bug fix. when doing so please try and make as few changes as possible and stay in scope of your change.
+4. test your changes. see [testing](#testing-preapp-locally) for more information
+5. open a pull request. someone will review your code after it has passed the automated test cases via github actions.
+
+## Testing preapp Locally
+to test preapp locally you'll need to create a github personal access token which can be done [here](https://github.com/settings/tokens). This token must have the following permissions.
+
+- `admin:gpg_key`
+- `admin:org`
+- `admin:org_hook`
+- `admin:public_key`
+- `admin:repo_hook`
+- `delete:packages` 
+- `delete_repo`
+- `gist`
+- `notifications`
+- `read:packages`
+- `repo`
+- `user`
+- `workflow`
+- `write:discussion`
+- `write:packages`
+
+this token can then be placed into a local file `tests/credentials.json` which should look like this
+
+```json
+{
+    "username": "<YOUR_GITHUB_USERNAME>",
+    "oauth_token": "<YOUR_GITHUB_OAUTH_TOKEN>"
+}
 ```
 
-### Important Node functions
-```python
-def pre_process(self) -> None:
-    # this function will execute before this node prompts its questions
+> Note: you should never commit or share this file with anyone
 
-def post_process(self, responses: Dict[str, Any]) -> None:
-    # this function will execute after this node prompts its questions.
-    # responses is a dictionary of the questions and their values
-
-@staticmethod
-def get_full_response() -> Dict[str, Any]:
-    # this function will return the reponses for all nodes that have executed. 
-    # the format is 
-    # {
-    #   "<node_name>": {
-    #       "<question_name>": "<question_value>",
-    #       ...
-    #   },
-    #   ...
-    # }
-
-@staticmethod
-def register(node: Node) -> None:
-    # this function takes in an instance of a node and will add it to the parsing tree
-    # Note: this function should be placed in the file the node is defined in and should be 
-    # called when the application starts 
-```
-
-### Example Node
-this is a small example of what a node might look like 
-```python
-# in preapp/nodes/example_node.py
-
-from .. import Node, InputQuestion
-
-class ExampleNode(Node):
-    """This is an example Node """
-
-    def __init__(self):
-        super(ExampleNode, self).__init__(
-            # name of the node
-            "example", 
-
-            # questions for the node
-            [
-                InputQuestion("name", "Enter your name"),
-                InputQuestion(
-                    "bio", "Enter a quick bio about yourself"
-                ),
-            ],
-        )
-
-    def pre_process(self) -> None:
-        print ("processing example node . . . ")
-
-    def post_process(self, responses: Dict[str, Any]) -> None:
-        print ("finished processing example node")
-
-Node.register(ExampleNode())
-```
+Now you should be able to run `nox` and it will test preapp locally for you 
