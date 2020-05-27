@@ -1,10 +1,10 @@
 from preapp.hooks import action_hook
 from preapp.node import Node
 from preapp.utils.miscellaneous import bash
-from preapp.utils.github import commit_and_push
+from preapp.utils.githubio import commit_and_push, get_gitignore_file
 from preapp.utils import __assets_directory__
 import os
-from preapp.utils.fileio import copy_file, file_to_text, text_to_file
+from preapp.utils.fileio import append_text_to_file, copy_file, file_to_text, text_to_file
 
 
 @action_hook("framework", "web_backend", "python")
@@ -38,6 +38,9 @@ def setup_module():
         f"{__assets_directory__}/python/module/noxfile.py",
         f"{os.getcwd()}/{project_name}/backend/noxfile.py",
     )
+
+    gitignore_source: str = get_gitignore_file("python")
+    append_text_to_file(gitignore_source, f"{os.getcwd()}/{project_name}/backend/.gitignore")
 
     # backend/<project_name> directory
     bash(f"cd {project_name}/backend && mkdir {project_name}")
