@@ -43,6 +43,26 @@ def text_to_file(text: str, file_path: str) -> None:
     fp.close()
 
 
+def append_file_to_file(source_file: str, destination_file) -> None:
+    source_fp: TextIOWrapper = open(source_file, "r")
+    source_raw: str = source_fp.read()
+    source_fp.close()
+
+    destination_fp: TextIOWrapper = open(destination_file, "a")
+    destination_fp.write(source_raw)
+    destination_fp.close()
+
+
+def append_text_to_file(text: str, destination_file: str) -> None:
+    destination_fp: TextIOWrapper = open(destination_file, "a")
+    destination_fp.write(text)
+    destination_fp.close()
+
+
+def delete_file(file_path: str) -> None:
+    os.remove(file_path)
+
+
 def get_all_assets(
     directory: str,
     file_type: str = None,
