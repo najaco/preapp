@@ -91,6 +91,7 @@ def test_web(web_framework):
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/requirements.txt")
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/noxfile.py")
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/setup.py")
+    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/.gitignore")
 
     setup_fp: TextIOWrapper = open(f"{os.getcwd()}/{web_framework}/backend/setup.py", "r")
     setup_source: str = setup_fp.read()
