@@ -1,4 +1,4 @@
-from .github import commit_and_push, get_authenticated_user
+from .githubio import commit_and_push, get_authenticated_user, get_gitignore_file
 from .fileio import (
     __assets_directory__,
     file_to_json,
@@ -8,6 +8,9 @@ from .fileio import (
     file_to_text,
     text_to_file,
     get_all_assets,
+    append_file_to_file,
+    append_text_to_file,
+    delete_file,
 )
 from .miscellaneous import bash
 from .database import Database

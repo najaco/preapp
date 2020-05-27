@@ -1,6 +1,6 @@
 from ... import Node, ConfirmQuestion
 from github import Github
-from preapp.utils.github import get_authenticated_user
+from preapp.utils.githubio import get_authenticated_user
 
 
 class GithubRepositoryNode(Node):

@@ -1,19 +1,20 @@
 import subprocess
 import github
+from github import Github, AuthenticatedUser, ContentFile
+import base64
 
-
-_CACHED_AUTHENTICATED_USER: github.AuthenticatedUser = None
+_CACHED_AUTHENTICATED_USER: AuthenticatedUser = None
 
 
 def get_authenticated_user(
     username: str = None, password: str = None, oauth_token: str = None
-) -> github.AuthenticatedUser:
+) -> AuthenticatedUser:
     global _CACHED_AUTHENTICATED_USER
 
     if oauth_token != None:
-        _CACHED_AUTHENTICATED_USER = github.Github(oauth_token).get_user()
+        _CACHED_AUTHENTICATED_USER = Github(oauth_token).get_user()
     if username != None and password != None:
-        _CACHED_AUTHENTICATED_USER = github.Github(username, password).get_user()
+        _CACHED_AUTHENTICATED_USER = Github(username, password).get_user()
 
     if _CACHED_AUTHENTICATED_USER == None:
         raise PermissionError("No user has been authenticated")
@@ -47,3 +48,12 @@ def commit_and_push(
         stdout=subprocess.PIPE,
     )
     stdout, _ = process.communicate()
+
+
+def get_gitignore_file(name: str) -> str:
+    github_object = Github()
+    file_contents: ContentFile = github_object.get_user("github").get_repo(
+        "gitignore"
+    ).get_contents(f"{name.capitalize()}.gitignore", "master")
+
+    return file_contents.decoded_content.decode("ascii")

@@ -1,7 +1,7 @@
 from preapp import Node, ConfirmQuestion
 from preapp.utils.fileio import file_to_json, get_all_assets
 from preapp.question import CheckboxQuestion, ListQuestion
-from preapp.utils.github import get_authenticated_user
+from preapp.utils.githubio import get_authenticated_user
 import github
 
 

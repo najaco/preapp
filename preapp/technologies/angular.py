@@ -1,10 +1,16 @@
 from preapp.hooks import action_hook
 from preapp.node import Node
 from preapp.utils.miscellaneous import bash
-from preapp.utils.github import commit_and_push
+from preapp.utils.githubio import commit_and_push
 from preapp.utils import __assets_directory__
 import os
-from preapp.utils.fileio import copy_file, file_to_json, raw_to_json_file
+from preapp.utils.fileio import (
+    append_file_to_file,
+    copy_file,
+    delete_file,
+    file_to_json,
+    raw_to_json_file,
+)
 
 
 @action_hook("framework", "web_frontend", "angular")
@@ -23,6 +29,10 @@ def setup():
             github_auth = Node.get_full_response()["github_credentials"]["oauth_token"]
 
         bash(f"cd {project_name} && ng new website")
+
+        # gitignore_file_path: str = f"{os.getcwd()}/{project_name}/website/.gitignore"
+        # append_file_to_file(gitignore_file_path, f"{os.getcwd()}/{project_name}/.gitignore")
+        # delete_file(gitignore_file_path)
 
         commit_and_push(
             "Initialized Angular",
