@@ -32,7 +32,9 @@ class FrameworkNode(Node):
                 ),
             )
             self.add_question(
-                ListQuestion("web_backend", "Select a backend web framework", ["python"])
+                ListQuestion(
+                    "web_backend", "Select a backend web framework", ["python", "python-flask"]
+                )
             )
 
     def post_process(self, responses):
