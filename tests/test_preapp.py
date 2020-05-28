@@ -85,6 +85,7 @@ def test_web(web_framework):
 
     # check for github actions file
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/.github/workflows/nodejs.yml")
+    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/.github/workflows/python.yml")
 
     # check for backend
     assert os.path.isdir(f"{os.getcwd()}/{web_framework}/backend")
@@ -115,7 +116,7 @@ def test_web(web_framework):
     # check for repository
     github_object = get_github_object()
     assert (
-        github_object.get_user().get_repo(web_framework).get_commits(sha="master").totalCount == 5
+        github_object.get_user().get_repo(web_framework).get_commits(sha="master").totalCount == 6
     )
 
     assert github_object.get_user().get_repo(web_framework).get_issues().totalCount == 4

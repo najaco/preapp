@@ -75,3 +75,24 @@ def setup_module():
         github_auth,
         directory=project_name,
     )
+
+
+@action_hook("github_actions", "web_backend", "python")
+def setup_actions():
+    project_name: str = Node.get_full_response()["metadata"]["name"]
+    github_username: str = Node.get_full_response()["github_credentials"]["username"]
+    github_auth: str = ""
+
+    if "password" in Node.get_full_response()["github_credentials"]:
+        github_auth = Node.get_full_response()["github_credentials"]["password"]
+    if "oauth_token" in Node.get_full_response()["github_credentials"]:
+        github_auth = Node.get_full_response()["github_credentials"]["oauth_token"]
+
+    copy_file(
+        f"{__assets_directory__}/python/module/python.yml",
+        f"{os.getcwd()}/{project_name}/.github/workflows/python.yml",
+    )
+
+    commit_and_push(
+        "Setup Github Actions", project_name, github_username, github_auth, directory=project_name,
+    )

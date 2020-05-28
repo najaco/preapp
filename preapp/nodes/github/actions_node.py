@@ -22,12 +22,16 @@ class GithubActionsNode(Node):
     def post_process(self, responses):
         if responses["use"] == True:
             frameworks: Dict[str, Any] = self.get_full_response()["framework"]
-            if "web_frontend" in frameworks:
-                project_name: str = self.get_full_response()["metadata"]["name"]
+            project_name: str = self.get_full_response()["metadata"]["name"]
+            bash(f"cd {project_name} && mkdir .github && cd .github && mkdir workflows")
 
-                bash(f"cd {project_name} && mkdir .github && cd .github && mkdir workflows")
+            for key, value in frameworks.items():
+                call_hook("github_actions", key, value)
 
-                call_hook("github_actions", "web_frontend", frameworks["web_frontend"])
+            # if "web_frontend" in frameworks:
+            #     call_hook("github_actions", "web_frontend", frameworks["web_frontend"])
+            # if "web_backend" in frameworks:
+            #     call_hook("github_actions", "web_backend", frameworks["web_backend"])
 
 
 Node.register(GithubActionsNode())
