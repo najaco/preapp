@@ -27,7 +27,7 @@ def test(session):
 
     if session.posargs:
         session.run(
-            "pytest", "tests/", "-n", "3", "--name", f"test-{session.posargs[0]}",
+            "pytest", "tests/", "-n", "5", "--name", f"test-{session.posargs[0]}",
         )
     else:
-        session.run("pytest", "tests/", "-n", "3")
+        session.run("pytest", "tests/", "-n", "5")

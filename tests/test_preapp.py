@@ -7,16 +7,15 @@ import os
 from flaky import flaky
 
 
-def _setup_web(project_name: str, web_framework: str, config_file: str) -> None:
-    # update the config file to have the correct information
+def __setup(project_name: str, framework: str, env_variable: str, config_file: str):
     config_fp: TextIOWrapper = open(config_file, "r")
     config_file_source: str = config_fp.read()
     config_fp.close()
 
-    config_file_source = config_file_source.replace("__WEB_FRAMEWORK__", web_framework)
+    config_file_source = config_file_source.replace(env_variable, framework)
     config_file_source = config_file_source.replace("__PROJECT_NAME__", project_name)
 
-    new_config_file: str = f"tests/{web_framework}-test-config.json"
+    new_config_file: str = f"tests/{framework}-test-config.json"
     config_fp: TextIOWrapper = open(new_config_file, "w")
     config_fp.write(config_file_source)
     config_fp.close()
@@ -29,7 +28,22 @@ def _setup_web(project_name: str, web_framework: str, config_file: str) -> None:
     stdout, _ = process.communicate()
 
 
-def _teardown_web(project_name: str, github_object: Github) -> None:
+def _setup_web(project_name: str, web_framework: str) -> None:
+    __setup(
+        project_name, web_framework, "__WEB_FRAMEWORK__", f"{os.getcwd()}/tests/web-config.json",
+    )
+
+
+def _setup_python(project_name: str, python_framework: str) -> None:
+    __setup(
+        project_name,
+        python_framework,
+        "__PYTHON_FRAMEWORK__",
+        f"{os.getcwd()}/tests/python-config.json",
+    )
+
+
+def _teardown(project_name: str, github_object: Github) -> None:
     # delete github repo
     github_object.get_user().get_repo(project_name).delete()
 
@@ -67,9 +81,19 @@ def name(pytestconfig):
 def web_framework(name, request):
     project_name: str = f"{name}-{request.param}"
 
-    _setup_web(project_name, request.param, f"{os.getcwd()}/tests/web-config.json")
+    _setup_web(project_name, request.param)
     yield project_name
-    _teardown_web(project_name, get_github_object())
+    _teardown(project_name, get_github_object())
+
+
+@pytest.mark.parametrize("name", ["name"])
+@pytest.fixture(scope="function", params=["python", "python-flask"])
+def python_framework(name, request):
+    project_name: str = f"{name}-{request.param}"
+
+    _setup_python(project_name, request.param)
+    yield project_name
+    _teardown(project_name, get_github_object())
 
 
 @flaky
@@ -87,17 +111,36 @@ def test_web(web_framework):
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/.github/workflows/nodejs.yml")
     assert os.path.isfile(f"{os.getcwd()}/{web_framework}/.github/workflows/python.yml")
 
-    # check for backend
-    assert os.path.isdir(f"{os.getcwd()}/{web_framework}/backend")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/requirements.txt")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/noxfile.py")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/setup.py")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/.gitignore")
+    # check for repository
+    github_object = get_github_object()
+    assert (
+        github_object.get_user().get_repo(web_framework).get_commits(sha="master").totalCount == 6
+    )
 
-    setup_fp: TextIOWrapper = open(f"{os.getcwd()}/{web_framework}/backend/setup.py", "r")
+    assert github_object.get_user().get_repo(web_framework).get_issues().totalCount == 4
+
+
+@flaky
+def test_python(python_framework):
+    # check for initial git files
+    assert os.path.isdir(f"{os.getcwd()}/{python_framework}")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/README.md")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/LICENSE")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/.gitignore")
+
+    # check for github actions file
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/.github/workflows/python.yml")
+
+    # check for backend
+    assert os.path.isdir(f"{os.getcwd()}/{python_framework}/backend")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/noxfile.py")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/setup.py")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/.gitignore")
+
+    setup_fp: TextIOWrapper = open(f"{os.getcwd()}/{python_framework}/backend/setup.py", "r")
     setup_source: str = setup_fp.read()
 
-    assert setup_source.find(f'name="{web_framework}"') != -1
+    assert setup_source.find(f'name="{python_framework}"') != -1
     assert setup_source.find('description="test"') != -1
     assert setup_source.find('version="0.0.1"') != -1
     assert setup_source.find('email="test"') != -1
@@ -106,17 +149,27 @@ def test_web(web_framework):
 
     setup_fp.close()
 
-    assert os.path.isdir(f"{os.getcwd()}/{web_framework}/backend/tests")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/tests/test_util.py")
+    assert os.path.isdir(f"{os.getcwd()}/{python_framework}/backend/tests")
+    assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/tests/test_util.py")
 
-    assert os.path.isdir(f"{os.getcwd()}/{web_framework}/backend/{web_framework}")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/{web_framework}/__init__.py")
-    assert os.path.isfile(f"{os.getcwd()}/{web_framework}/backend/{web_framework}/__main__.py")
+    if python_framework == "python-flask":
+        assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/api.py")
+        assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/.flaskenv")
+        assert os.path.isfile(f"{os.getcwd()}/{python_framework}/backend/requirements.txt")
+    if python_framework == "python":
+        assert os.path.isdir(f"{os.getcwd()}/{python_framework}/backend/{python_framework}")
+        assert os.path.isfile(
+            f"{os.getcwd()}/{python_framework}/backend/{python_framework}/__main__.py"
+        )
+        assert os.path.isfile(
+            f"{os.getcwd()}/{python_framework}/backend/{python_framework}/__init__.py"
+        )
 
     # check for repository
     github_object = get_github_object()
     assert (
-        github_object.get_user().get_repo(web_framework).get_commits(sha="master").totalCount == 6
+        github_object.get_user().get_repo(python_framework).get_commits(sha="master").totalCount
+        == 6
     )
 
-    assert github_object.get_user().get_repo(web_framework).get_issues().totalCount == 4
+    assert github_object.get_user().get_repo(python_framework).get_issues().totalCount == 4

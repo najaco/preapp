@@ -10,8 +10,8 @@
         ]
     },
     "framework": {
-        "web_frontend": "__WEB_FRAMEWORK__",
-        "web_backend": "python-flask"
+        "web_frontend": "vue",
+        "web_backend": "__PYTHON_FRAMEWORK__"
     },
     "nodejs": {
         "node": "12.16.2",
